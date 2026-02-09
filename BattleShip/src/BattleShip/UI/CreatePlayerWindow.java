@@ -2,12 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package BattleShip;
+package BattleShip.UI;
 
 /**
  *
  * @author axelr
  */
+import BattleShip.UI.MenuPrincipalWindow;
+import BattleShip.UI.MenuWindow;
 import BattleShip.core.PlayerManager;
 
 import javax.swing.*;
@@ -42,8 +44,7 @@ public class CreatePlayerWindow extends JFrame{
     private void configureWindow(){
         setTitle("BattleShip - CreatePlayer");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
-        
+        setResizable(false);       
         setSize(1100, 620);
         setLocationRelativeTo(null);
     }
@@ -153,7 +154,8 @@ public class CreatePlayerWindow extends JFrame{
         }
         
         manager.crearPlayer(user, pass, selectedImagePath);
-        new MessageDialog(this, manager, "fondo5.png").setVisible(true);
+        MenuPrincipalWindow mp= new MenuPrincipalWindow(manager, manager.login(user, pass));
+        mp.setVisible(true);
         dispose();
     }
     

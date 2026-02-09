@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package BattleShip;
+package BattleShip.UI;
 
 /**
  *
@@ -52,18 +52,12 @@ public class MenuWindow extends JFrame {
         JPanel content = new JPanel(null);
         setContentPane(content);
 
-        // Fondo escalado al tamaño de ventana
         background = new JLabel();
         background.setBounds(0, 0, WIN_W, WIN_H);
         background.setIcon(loadScaledIcon(IMG_BACKGROUND, WIN_W, WIN_H));
         background.setLayout(null);
         content.add(background);
 
-        // =========================
-        // LOGO "BattleShip"
-        // =========================
-        // Posición aproximada al mockup: zona inferior izquierda.
-        // Usamos porcentajes para que funcione con cualquier tamaño de ventana.
         int logoW = (int) (WIN_W * 0.45);
         int logoH = (int) (WIN_H * 0.30);
         int logoX = (int) (WIN_W * 0.03);
@@ -74,14 +68,9 @@ public class MenuWindow extends JFrame {
         logo.setIcon(loadScaledIcon(IMG_LOGO, logoW, logoH));
         background.add(logo);
 
-        // =========================
-        // BOTONES (escalados)
-        // =========================
-        // Tamaños relativos (ajustables)
         int btnW = (int) (WIN_W * 0.30);
         int btnH = (int) (WIN_H * 0.30);
 
-        // Columna derecha como en el mockup
         int btnX = (int) (WIN_W * 0.60);
         int btnY1 = (int) (WIN_H * 0.02);
         int gap = (int) (WIN_H * 0.000001);
@@ -98,7 +87,6 @@ public class MenuWindow extends JFrame {
         background.add(btnCreate);
         background.add(btnExit);
 
-        // Acciones
         btnLogin.addActionListener(e -> onLogin());
         btnCreate.addActionListener(e -> onCreate());
         btnExit.addActionListener(e -> onExit());
@@ -136,7 +124,6 @@ public class MenuWindow extends JFrame {
         return new ImageIcon(scaled);
     }
 
-    // ====== Acciones (por ahora) ======
     private void onLogin() {
         LoginWindow w = new LoginWindow(manager);
         w.setVisible(true);

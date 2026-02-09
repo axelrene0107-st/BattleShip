@@ -2,12 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package BattleShip;
+package BattleShip.UI;
 
 /**
  *
  * @author axelr
  */
+import BattleShip.UI.MenuPrincipalWindow;
+import BattleShip.UI.MenuWindow;
 import BattleShip.core.Player;
 import BattleShip.core.PlayerManager;
 

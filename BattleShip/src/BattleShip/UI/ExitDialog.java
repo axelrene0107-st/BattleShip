@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package BattleShip;
+package BattleShip.UI;
 
 /**
  *
@@ -47,9 +47,6 @@ public class ExitDialog extends JDialog {
         background.setLayout(null);
         content.add(background);
 
-        // =========================
-        // BOTONES (ESCALADOS)
-        // =========================
         int btnW = 170;
         int btnH = 90;
         int y = 90;
@@ -63,7 +60,6 @@ public class ExitDialog extends JDialog {
         background.add(btnCancel);
         background.add(btnExit);
 
-        // Acciones
         btnCancel.addActionListener(e -> dispose());
         btnExit.addActionListener(e -> System.exit(0));
     }

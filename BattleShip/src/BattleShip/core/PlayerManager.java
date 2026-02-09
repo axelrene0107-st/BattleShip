@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * @author axelr
  */
 public class PlayerManager {
-    
     private ArrayList<Player> players;
     
     public PlayerManager(){
@@ -17,9 +16,12 @@ public class PlayerManager {
     }
     
     public boolean crearPlayer(String username, String password, String imagePath){
-        if (username == null || username.isBlank()) return false;
-        if (password == null || password.isBlank()) return false;
-        if (existeUsuario(username)) return false;
+        if (username == null || username.isBlank()) 
+            return false;
+        if (password == null || password.isBlank()) 
+            return false;
+        if (existeUsuario(username)) 
+            return false;
 
         players.add(new Player(username.trim(), password, imagePath));
         return true;
@@ -42,4 +44,29 @@ public class PlayerManager {
         }
         return false;
     }
+    
+    public Player conseguirPorNombre(String username) {
+        if (username == null) return null;
+        for (Player p : players) { // players = tu ArrayList<Player>
+            if (p.getUsername().equalsIgnoreCase(username.trim())) {
+                return p;
+            }
+        }
+        return null;
+    }
+    
+    public void actualizarPlayer(Player updated) {
+
+        for (int i = 0; i < players.size(); i++) {
+            Player p = players.get(i);
+
+            if (p.getUsername().equalsIgnoreCase(updated.getUsername())) {
+                players.set(i, updated);
+                return;
+            }
+        }
+
+        throw new IllegalStateException("Player no encontrado para actualizar");
+    }
+
 }

@@ -8,14 +8,18 @@ package BattleShip;
  *
  * @author axelr
  */
+import BattleShip.UI.MenuWindow;
 import BattleShip.core.PlayerManager;
 import javax.swing.SwingUtilities;
 
 public class Main {
-    public static void main(String[] args) {     
+    public static void main(String[] args) { 
+        //Accion principal utilizando swingutilities para llamar ventanas
         SwingUtilities.invokeLater(() -> {
             PlayerManager manager = new PlayerManager();
-            new MenuWindow(manager).setVisible(true);
+            MenuWindow mw= new MenuWindow(manager);
+            mw.setVisible(true);
         });
+        
     }
 }
