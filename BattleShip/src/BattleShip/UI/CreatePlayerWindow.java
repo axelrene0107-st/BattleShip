@@ -8,8 +8,6 @@ package BattleShip.UI;
  *
  * @author axelr
  */
-import BattleShip.UI.MenuPrincipalWindow;
-import BattleShip.UI.MenuWindow;
 import BattleShip.core.PlayerManager;
 
 import javax.swing.*;
@@ -20,10 +18,13 @@ import java.net.URL;
 public class CreatePlayerWindow extends JFrame{
     
     private static final String ASSETS = "/BattleShip/assets/";
-    private static final String BG_CREATE = "fondo4.png";
+    private static final String BG_CREATE = "fondo2.png";
     private static final String BTN_SELECT= "selectPhotoBTN.png";
+    private static final String BTN_SELECT_PRESS= "selectPhotoPRESS_BTN.png";
     private static final String BTN_CANCEL = "cancelBTN.png";
+    private static final String BTN_CANCEL_PRESS = "cancelPRESS_BTN.png";
     private static final String BTN_SAVE = "saveBTN.png";
+    private static final String BTN_SAVE_PRESS = "savePRESS_BTN.png";
 
     private final PlayerManager manager;
     private String selectedImagePath = null;
@@ -62,7 +63,7 @@ public class CreatePlayerWindow extends JFrame{
         
         //Preview de imagen
         imgPreview = new JLabel();
-        imgPreview.setBounds(220, 50, 200, 160);
+        imgPreview.setBounds(240, 50, 200, 160);
         imgPreview.setOpaque(true);
         imgPreview.setBackground(new Color(70, 80, 90));
         imgPreview.setHorizontalAlignment(SwingConstants.CENTER);
@@ -73,7 +74,7 @@ public class CreatePlayerWindow extends JFrame{
         int selectW = 210;
         int selectH = 105;
 
-        JLabel btnSelectPhoto = createImageButton("selectPhotoBTN.png", selectW, selectH, this::selectPhoto);
+        JLabel btnSelectPhoto = createImageButton(BTN_SELECT, BTN_SELECT_PRESS, selectW, selectH, this::selectPhoto);
 
         btnSelectPhoto.setBounds(430, 125, selectW, selectH);
         bg.add(btnSelectPhoto);
@@ -81,8 +82,8 @@ public class CreatePlayerWindow extends JFrame{
         txtUser = new JTextField();
         txtPass = new JPasswordField();
         
-        txtUser.setBounds(220, 280, 620, 42);
-        txtPass.setBounds(220, 410, 620, 42);
+        txtUser.setBounds(240, 270, 620, 42);
+        txtPass.setBounds(240, 380, 620, 42);
         
         styleField(txtUser);
         styleField(txtPass);
@@ -93,8 +94,8 @@ public class CreatePlayerWindow extends JFrame{
         int btnW = 210;
         int btnH = 105;
         
-        JLabel btnCancel= createImageButton(BTN_CANCEL, btnW, btnH, this::onCancel);
-        JLabel btnSave= createImageButton(BTN_SAVE, btnW, btnH, this::onSave);
+        JLabel btnCancel= createImageButton(BTN_CANCEL, BTN_CANCEL_PRESS, btnW, btnH, this::onCancel);
+        JLabel btnSave= createImageButton(BTN_SAVE, BTN_SAVE_PRESS, btnW, btnH, this::onSave);
         
         btnCancel.setBounds(460, 470, btnW, btnH);
         btnSave.setBounds(655, 470, btnW, btnH);
@@ -106,7 +107,7 @@ public class CreatePlayerWindow extends JFrame{
     
     
     private void styleField(JTextField field){
-        field.setFont(new Font("Arial", Font.PLAIN, 18));
+        field.setFont(new Font("Minecraft", Font.PLAIN, 18));
         field.setForeground(Color.WHITE);
         field.setBackground(new Color(70, 80, 90));
         field.setCaretColor(Color.WHITE);
@@ -142,17 +143,34 @@ public class CreatePlayerWindow extends JFrame{
         String pass= new String(txtPass.getPassword());
         
         if(user.isBlank() || pass.isBlank() || selectedImagePath == null){
-            new MessageDialog(this, manager, "fondoError2.png").setVisible(true);
+            Mensaje.showOk(this, "fondo5.png", "Favor llene todos los espacios.","okBTN.png", "okPRESS_BTN.png");
+            new MenuWindow(manager).setVisible(true);
             dispose();
             return;
         }
         
         if (manager.existeUsuario(user)) {
-            new MessageDialog(this, manager, "fondoError1.png").setVisible(true);
+            Mensaje.showOk(this, "fondo5.png", "Nombre en uso, favor utilice otro.","okBTN.png", "okPRESS_BTN.png");
+            new MenuWindow(manager).setVisible(true);
             dispose();
             return;
         }
         
+        if(user.contains(" ") || user.length()<4){
+            Mensaje.showOk(this, "fondo5.png", "Usuario sin espacios y con mas de 3 caracteres.","okBTN.png", "okPRESS_BTN.png");
+            new MenuWindow(manager).setVisible(true);
+            dispose();
+            return;
+        }
+        
+        if(pass.contains(" ") || pass.length()<4){
+            Mensaje.showOk(this, "fondo5.png", "Contraseña sin espacios y con mas de 4 caracteres.","okBTN.png", "okPRESS_BTN.png");
+            new MenuWindow(manager).setVisible(true);
+            dispose();
+            return;
+        }
+        
+        Mensaje.showOk(this, "fondo5.png", "JUGADOR CREADO CON EXITO!","okBTN.png", "okPRESS_BTN.png");
         manager.crearPlayer(user, pass, selectedImagePath);
         MenuPrincipalWindow mp= new MenuPrincipalWindow(manager, manager.login(user, pass));
         mp.setVisible(true);
@@ -160,15 +178,27 @@ public class CreatePlayerWindow extends JFrame{
     }
     
     
-    private JLabel createImageButton(String img, int w, int h, Runnable action){
-        JLabel btn = new JLabel();
-        btn.setIcon(loadScaledIcon(img, w, h));
+    private JLabel createImageButton(String imgNormal, String imgPressed, int w, int h, Runnable action) {
+        ImageIcon normal = loadScaledIcon(imgNormal, w, h);
+        ImageIcon pressed = loadScaledIcon(imgPressed, w, h);
+
+        JLabel btn = new JLabel(normal);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btn.addMouseListener(new java.awt.event.MouseAdapter(){
-            @Override public void  mouseClicked(java.awt.event.MouseEvent e){
-                action.run();
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            private boolean inside = false;
+
+            @Override public void mouseEntered(java.awt.event.MouseEvent e) { inside = true; }
+            @Override public void mouseExited (java.awt.event.MouseEvent e)  { inside = false; btn.setIcon(normal); }
+
+            @Override public void mousePressed(java.awt.event.MouseEvent e) { btn.setIcon(pressed); }
+
+            @Override public void mouseReleased(java.awt.event.MouseEvent e) {
+                btn.setIcon(normal);
+                if (inside && SwingUtilities.isLeftMouseButton(e)) action.run();
             }
         });
+
         return btn;
     }
     

@@ -17,7 +17,7 @@ public class Main {
         //Accion principal utilizando swingutilities para llamar ventanas
         SwingUtilities.invokeLater(() -> {
             PlayerManager manager = new PlayerManager();
-            MenuWindow mw= new MenuWindow(manager);
+            MenuWindow mw = new MenuWindow(manager);
             mw.setVisible(true);
         });
         

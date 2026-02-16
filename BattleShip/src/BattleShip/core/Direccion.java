@@ -9,5 +9,5 @@ package BattleShip.core;
  * @author axelr
  */
 public enum Direccion {
-    HORIZONTAL, VERTICAL;
+    NORTE, SUR, ESTE, OESTE; 
 }

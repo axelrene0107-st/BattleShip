@@ -8,8 +8,6 @@ package BattleShip.UI;
  *
  * @author axelr
  */
-import BattleShip.UI.MenuPrincipalWindow;
-import BattleShip.UI.MenuWindow;
 import BattleShip.core.Player;
 import BattleShip.core.PlayerManager;
 
@@ -22,7 +20,9 @@ public class LoginWindow extends JFrame{
 
     private static final String BG_LOGIN = "fondo6.png";
     private static final String BTN_CANCEL = "cancelBTN.png";
+    private static final String BTN_CANCEL_PRESS = "cancelPRESS_BTN.png";
     private static final String BTN_LOGIN = "loginBTN.png";
+    private static final String BTN_LOGIN_PRESS = "loginPRESS_BTN.png";
 
     private final PlayerManager manager;
 
@@ -78,8 +78,8 @@ public class LoginWindow extends JFrame{
         int btnW = 220;
         int btnH = 110;
 
-        JLabel btnCancel = createImageButton(BTN_CANCEL, btnW, btnH, this::onCancel);
-        JLabel btnLogin = createImageButton(BTN_LOGIN, btnW, btnH, this::onLogin);
+        JLabel btnCancel = createImageButton(BTN_CANCEL, BTN_CANCEL_PRESS, btnW, btnH, this::onCancel);
+        JLabel btnLogin = createImageButton(BTN_LOGIN, BTN_LOGIN_PRESS, btnW, btnH, this::onLogin);
 
         btnCancel.setBounds(350, 475, btnW, btnH);
         btnLogin.setBounds(550, 475, btnW, btnH);
@@ -93,7 +93,8 @@ public class LoginWindow extends JFrame{
         String pass = new String(txtPass.getPassword());
 
         if (user.isBlank() || pass.isBlank()) {
-            new MessageDialog(this, manager, "fondoError2.png").setVisible(true);
+            Mensaje.showOk(this, "fondo5.png", "Favor llene todos los espacios.","okBTN.png", "okPRESS_BTN.png");
+            new MenuWindow(manager).setVisible(true);
             dispose();
             return;
         }
@@ -101,11 +102,13 @@ public class LoginWindow extends JFrame{
         Player p = manager.login(user, pass);
 
         if (p == null) {
-            new MessageDialog(this, manager, "fondoError1.png").setVisible(true);
+            Mensaje.showOk(this, "fondo5.png", "Usuario o contraseña incorrectos.","okBTN.png", "okPRESS_BTN.png");
+            new MenuWindow(manager).setVisible(true);
             dispose();
             return;
         }
 
+        Mensaje.showOk(this, "fondo5.png", "Se ingreso con exito, bienvenido " + user,"okBTN.png", "okPRESS_BTN.png");
         new MenuPrincipalWindow(manager, p).setVisible(true);
         dispose();
     }
@@ -116,23 +119,34 @@ public class LoginWindow extends JFrame{
     }
      
      private void styleField(JTextField field) {
-        field.setFont(new Font("Arial", Font.PLAIN, 18));
+        field.setFont(new Font("Minecraft", Font.PLAIN, 18));
         field.setForeground(Color.WHITE);
         field.setBackground(new Color(70, 80, 90));
         field.setCaretColor(Color.WHITE);
         field.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
     }
      
-     private JLabel createImageButton(String img, int w, int h, Runnable action) {
-        JLabel btn = new JLabel();
-        btn.setIcon(loadScaledIcon(img, w, h));
+     private JLabel createImageButton(String imgNormal, String imgPressed, int w, int h, Runnable action) {
+        ImageIcon normal = loadScaledIcon(imgNormal, w, h);
+        ImageIcon pressed = loadScaledIcon(imgPressed, w, h);
+
+        JLabel btn = new JLabel(normal);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                action.run();
+            private boolean inside = false;
+
+            @Override public void mouseEntered(java.awt.event.MouseEvent e) { inside = true; }
+            @Override public void mouseExited (java.awt.event.MouseEvent e)  { inside = false; btn.setIcon(normal); }
+
+            @Override public void mousePressed(java.awt.event.MouseEvent e) { btn.setIcon(pressed); }
+
+            @Override public void mouseReleased(java.awt.event.MouseEvent e) {
+                btn.setIcon(normal);
+                if (inside && SwingUtilities.isLeftMouseButton(e)) action.run();
             }
         });
+
         return btn;
     }
      

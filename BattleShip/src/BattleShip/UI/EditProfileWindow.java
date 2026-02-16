@@ -8,23 +8,25 @@ package BattleShip.UI;
  *
  * @author axelr
  */
-import BattleShip.UI.MenuPrincipalWindow;
 import BattleShip.core.PlayerManager;
 import BattleShip.core.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
 
 public class EditProfileWindow extends JFrame{
     private static final String ASSETS= "/BattleShip/assets/";
-    
     private static final String BG = "fondo4.png";
-    
+    private static final String BTN_SELECTPHOTO = "selectPhotoBTN.png";
+    private static final String BTN_SELECTPHOTO_PRESS = "selectPhotoPRESS_BTN.png";
+    private static final String BTN_DELETE = "deleteBTN.png";
+    private static final String BTN_DELETE_PRESS = "deletePRESS_BTN.png";
     private static final String BTN_CANCEL = "cancelBtn.png";
-    private static final String BTN_SAVE = "saveBtn.png";
+    private static final String BTN_CANCEL_PRESS = "cancelPRESS_Btn.png";
+    private static final String BTN_SAVE = "saveBTN.png";
+    private static final String BTN_SAVE_PRESS = "savePRESS_Btn.png";
    
     private final PlayerManager manager;
     private final Player current;
@@ -69,7 +71,7 @@ public class EditProfileWindow extends JFrame{
         
         //Preview de imagen
         imgPreview = new JLabel();
-        imgPreview.setBounds(220, 50, 200, 160);
+        imgPreview.setBounds(240, 50, 200, 160);
         imgPreview.setOpaque(true);
         imgPreview.setBackground(new Color(70, 80, 90));
         imgPreview.setHorizontalAlignment(SwingConstants.CENTER);
@@ -80,16 +82,15 @@ public class EditProfileWindow extends JFrame{
         int selectW = 210;
         int selectH = 105;
 
-        JLabel btnSelectPhoto = createImageButton("selectPhotoBTN.png", selectW, selectH, this::selectPhoto);
-
+        JLabel btnSelectPhoto = createImageButton(BTN_SELECTPHOTO, BTN_SELECTPHOTO_PRESS, selectW, selectH, this::selectPhoto);
         btnSelectPhoto.setBounds(430, 125, selectW, selectH);
         bg.add(btnSelectPhoto);
         
         txtUser = new JTextField();
         txtPass = new JPasswordField();
         
-        txtUser.setBounds(220, 280, 620, 42);
-        txtPass.setBounds(220, 410, 620, 42);
+        txtUser.setBounds(240, 270, 620, 42);
+        txtPass.setBounds(240, 380, 620, 42);
         
         styleField(txtUser);
         styleField(txtPass);
@@ -100,11 +101,15 @@ public class EditProfileWindow extends JFrame{
         int btnW = 210;
         int btnH = 105;
         
-        JLabel btnCancel= createImageButton(BTN_CANCEL, btnW, btnH, this::onCancel);
-        JLabel btnSave= createImageButton(BTN_SAVE, btnW, btnH, this::onSave);
+        JLabel btnDelete= createImageButton(BTN_DELETE, BTN_DELETE_PRESS, btnW, btnH, this::onDelete);
+        btnDelete.setBounds(255, 470, btnW, btnH);
+        bg.add(btnDelete);
         
-        btnCancel.setBounds(460, 470, btnW, btnH);
-        btnSave.setBounds(655, 470, btnW, btnH);
+        JLabel btnCancel= createImageButton(BTN_CANCEL, BTN_CANCEL_PRESS, btnW, btnH, this::onCancel);
+        btnCancel.setBounds(450, 470, btnW, btnH);
+        
+        JLabel btnSave= createImageButton(BTN_SAVE, BTN_SAVE_PRESS, btnW, btnH, this::onSave);
+        btnSave.setBounds(645, 470, btnW, btnH);
         
         bg.add(btnCancel);
         bg.add(btnSave);
@@ -152,7 +157,7 @@ public class EditProfileWindow extends JFrame{
         String newPass = new String(txtPass.getPassword()).trim();
         
         if(newUser.isEmpty() || newPass.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Favor ingrese todos los datos.");
+            Mensaje.showOk(this, "fondo5.png", "Favor llene todos los espacios.","okBTN.png", "okPRESS_BTN.png");
             return;
         }
         
@@ -160,30 +165,49 @@ public class EditProfileWindow extends JFrame{
         
         if(userChanged){
             if(manager.existeUsuario(newUser)){
-                JOptionPane.showMessageDialog(this, "El usuario ya existe");
+                Mensaje.showOk(this, "fondo5.png", "Nombre en uso.","okBTN.png", "okPRESS_BTN.png");
                 return;
             }
         } 
         
-        current.setUsername(newUser);
-        current.setPassword(newPass);
+        if(newPass.contains(" ") || newPass.length()<4){
+            Mensaje.showOk(this, "fondo5.png", "Contraseña sin espacios y con mas de 4 caracteres.","okBTN.png", "okPRESS_BTN.png");
+            return;
+        }
+        
+        Mensaje.showConfirmWithAction(this, "fondo3.png", "Deseas guardar los cambios? ","saveBTN.png", "savePRESS_BTN.png", "cancelBTN.png", "cancelPRESS_BTN.png",() -> {
+            current.setUsername(newUser);
+            current.setPassword(newPass);
+        });
         
         if(selectedImagePath != null){
             try{
                 current.setImagePath(selectedImagePath);
-            }catch (Exception ignored){}
-        }
-        
-        
+            }catch (Exception ignored){
+                    Mensaje.showOk(this, "fondo5.png", "Favor seleccione una imagen.","okBTN.png", "okPRESS_BTN.png");
+                return;
+            }
+        }        
+  
         try{
             manager.actualizarPlayer(current);
-        }catch(Exception Ignored){}
+        }catch(Exception Ignored){
+            Mensaje.showOk(this, "fondo5.png", "No se pudieron guardar los cambios.","okBTN.png", "okPRESS_BTN.png");
+        }
+        
         
         dispose();
         new MenuPrincipalWindow(manager, current).setVisible(true);
     }
     
-    
+    private void onDelete(){
+        Mensaje.showConfirmWithAction(this, "fondo3.png", "Seguro deseas eliminar tu cuenta?","deleteBTN.png", "deletePRESS_BTN.png", "cancelBTN.png", "cancelPRESS_BTN.png",() -> {
+            manager.eliminarPlayer(current.getUsername());
+            dispose();
+            new MenuWindow(manager).setVisible(true);
+        });
+    }
+
     private void refrescarImagen(String absolutePath){
         if(absolutePath == null || absolutePath.isBlank()){
             imgPreview.setIcon(null);
@@ -197,13 +221,27 @@ public class EditProfileWindow extends JFrame{
     }
     
     
-    private JLabel createImageButton(String img, int w, int h, Runnable action){
-        JLabel btn = new JLabel(cargarIconoEscalado(img, w, h));
+    private JLabel createImageButton(String imgNormal, String imgPressed, int w, int h, Runnable action) {
+        ImageIcon normal = cargarIconoEscalado(imgNormal, w, h);
+        ImageIcon pressed = cargarIconoEscalado(imgPressed, w, h);
+
+        JLabel btn = new JLabel(normal);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btn.addMouseListener(new MouseAdapter(){
-           @Override
-           public void mouseClicked(MouseEvent e){action.run();} 
-        });        
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            private boolean inside = false;
+
+            @Override public void mouseEntered(java.awt.event.MouseEvent e) { inside = true; }
+            @Override public void mouseExited (java.awt.event.MouseEvent e)  { inside = false; btn.setIcon(normal); }
+
+            @Override public void mousePressed(java.awt.event.MouseEvent e) { btn.setIcon(pressed); }
+
+            @Override public void mouseReleased(java.awt.event.MouseEvent e) {
+                btn.setIcon(normal);
+                if (inside && SwingUtilities.isLeftMouseButton(e)) action.run();
+            }
+        });
+
         return btn;
     }
     
@@ -213,7 +251,7 @@ public class EditProfileWindow extends JFrame{
         field.setForeground(Color.WHITE);
         field.setCaretColor(Color.WHITE);
         field.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
-        field.setFont(new Font("Arial", Font.PLAIN, 18));
+        field.setFont(new Font("Minecraft", Font.PLAIN, 18));
     }
     
     

@@ -21,6 +21,10 @@ public class Instance {
         return tipo;
     }
     
+    public int getVidasMax(){
+        return tipo.getTamanio();
+    }
+    
     public int getVidasActuales(){
         return vidasActuales;
     }
@@ -33,6 +37,11 @@ public class Instance {
         
     public boolean estaHundido(){
         return vidasActuales<= 0;
+    }
+    
+    @Override
+    public String toString() {
+        return tipo.getCodigo() + " (" + vidasActuales + "/" + tipo.getTamanio() + ")";
     }
     
 

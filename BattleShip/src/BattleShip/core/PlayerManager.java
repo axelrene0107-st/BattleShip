@@ -68,5 +68,24 @@ public class PlayerManager {
 
         throw new IllegalStateException("Player no encontrado para actualizar");
     }
+    
+    public boolean eliminarPlayer(String username) {
+        if (username == null) 
+            return false;
+
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getUsername().equalsIgnoreCase(username.trim())) {
+                players.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public ArrayList<Player> getRanking() {
+        ArrayList<Player> ranking = new ArrayList<>(players);
+        ranking.sort((a, b) -> Integer.compare(b.getPuntos(), a.getPuntos()));
+        return ranking;
+    }
 
 }

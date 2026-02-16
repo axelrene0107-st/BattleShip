@@ -8,6 +8,8 @@ package BattleShip.core;
  *
  * @author axelr
  */
+
+import java.util.ArrayList;
 public class Player {
     public enum Difficulty{EASY, NORMAL, EXPERT, GENIUS}
     public enum Mode{ARCADE, TUTORIAL}
@@ -19,13 +21,39 @@ public class Player {
     private Difficulty difficulty;
     private Mode mode;
     
+    private final Tablero tablero;
+    
+    private final ArrayList<Partida> historial;
+      
     public Player(String username, String password, String imagePath){
         this.username= username;
         this.password= password;
         this.imagePath= imagePath;
-        this.puntos=0;
+        
+        this.puntos=0;       
         difficulty= Difficulty.EASY;
-        mode= Mode.ARCADE;
+        mode= Mode.ARCADE;            
+        this.tablero = new Tablero();
+        historial = new ArrayList<>();
+    }
+    
+    public void addLog(Partida log) {
+        historial.add(0, log);
+        if (historial.size() > 10) {
+            historial.remove(10); 
+        }
+    }
+
+    public ArrayList<Partida> getUltimos10Juegos() {
+        return new ArrayList<>(historial);
+    }
+
+    public void sumarVictoria() {
+        puntos += 3;
+    }
+    
+    public Tablero getTablero(){
+        return tablero;
     }
     
     public String getUsername(){
@@ -51,15 +79,15 @@ public class Player {
     public Mode getMode(){
         return mode;
     }
-
+    
     public void setUsername(String username) {
         this.username = username;
     }
-
+    
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
     public void setPuntos(int puntos) {
         this.puntos = puntos;
     }
@@ -75,4 +103,5 @@ public class Player {
     public void setMode(Mode mode){
         this.mode= mode;
     }
+    
 }
