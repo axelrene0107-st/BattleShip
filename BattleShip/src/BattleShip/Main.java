@@ -20,6 +20,5 @@ public class Main {
             MenuWindow mw = new MenuWindow(manager);
             mw.setVisible(true);
         });
-        
     }
 }

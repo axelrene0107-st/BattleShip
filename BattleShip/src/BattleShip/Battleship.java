@@ -48,10 +48,6 @@ public class Battleship {
     private Estado estado = Estado.SETUP;
     private Turno turnoActual = Turno.JUGADOR1;
 
-    private int turnos = 0;
-    private int disparosJugador1 = 0;
-    private int disparosJugador2 = 0;
-
     public Battleship(Player player1, Player player2, Tablero tableroJugador1, Tablero tableroJugador2) {
         if(player1 == null || player2 == null) 
             throw new IllegalArgumentException("Players no pueden ser null.");
@@ -66,9 +62,6 @@ public class Battleship {
         estado = Estado.EN_JUEGO;
         turnoActual = Turno.JUGADOR1;      
         disparoHecho = false;
-        turnos = 0;
-        disparosJugador1 = 0;
-        disparosJugador2 = 0;
     }
 
     public Estado getEstado(){
@@ -80,11 +73,11 @@ public class Battleship {
     }
     
     public Player getJugadorActual(){
-        return (turnoActual == Turno.JUGADOR1) ? player1 : player2;
+        return (turnoActual == Turno.JUGADOR1) ? player1 : player2;//ternario para conseguir player dependiendo del turno
     }
     
     public Player getOponenteActual(){
-        return (turnoActual == Turno.JUGADOR1) ? player2 : player1;
+        return (turnoActual == Turno.JUGADOR1) ? player2 : player1;//ternario para conseguir el oponente
     }
 
     public Tablero getTableroJugador1() {
@@ -106,16 +99,10 @@ public class Battleship {
         }
         
         Turno turnoDisparo = turnoActual;
-        Tablero tableroDefensor = (turnoActual == Turno.JUGADOR1) ? tableroJugador2 : tableroJugador1;
+        Tablero tableroDefensor = (turnoActual == Turno.JUGADOR1) ? tableroJugador2 : tableroJugador1;//ternario para conseguir el tablero que se muestra
         
         ResultadoDisparo resultado = tableroDefensor.disparar(fila, columna);
         disparoHecho = true;
-        
-        turnos++;
-        if(turnoActual == Turno.JUGADOR1) 
-            disparosJugador1++;
-        else
-            disparosJugador2++;
             
         boolean regenerado = false;
         boolean fin = false;
@@ -128,7 +115,7 @@ public class Battleship {
                 ganador = getJugadorActual();
                 
                 Partida log = new Partida(fechaPartida, player1.getUsername(), player2.getUsername(), ganador.getUsername(), ganador.getDifficulty(), ganador.getMode(), false);
-
+                
                 player1.addLog(log);
                 player2.addLog(log);
 
@@ -146,7 +133,7 @@ public class Battleship {
     
     
     private void cambiarTurno(){
-        turnoActual = (turnoActual == Turno.JUGADOR1) ? Turno.JUGADOR2 : Turno.JUGADOR1;
+        turnoActual = (turnoActual == Turno.JUGADOR1) ? Turno.JUGADOR2 : Turno.JUGADOR1;//Ternario para cambiar turno
     }
     
     public boolean pasarTurno(){
@@ -178,7 +165,7 @@ public class Battleship {
 
         ganador.sumarVictoria();//Metodo de player para sumar los tres puntos 
         
-        player1.getTablero().reset();//Reseteo de los tablero para que esten limpios para la siguiente partida 
+        player1.getTablero().reset();//Reseteo de los tablero para que esten limpios para la siguiente partida  
         player2.getTablero().reset();
     }    
 }

@@ -9,8 +9,7 @@ package BattleShip.core;
  * @author axelr
  */
 import java.util.Calendar;
-public class Partida {
-    private final Calendar fechaPartida;
+public class Partida extends Log{
     private final String jugador1;
     private final String jugador2;
     private final String ganador;
@@ -19,17 +18,13 @@ public class Partida {
     private final boolean retiro;
 
     public Partida(Calendar fechaPartida, String jugador1, String jugador2, String ganador, Player.Difficulty difficulty, Player.Mode mode, boolean retiro) {
-        this.fechaPartida = fechaPartida;
+        super(fechaPartida);
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
         this.ganador = ganador;
         this.difficulty = difficulty;
         this.mode = mode;
         this.retiro = retiro;
-    }
-    
-    public Calendar getFechaPartida() { 
-        return fechaPartida; 
     }
     
     public String getJugador1() { 
@@ -56,13 +51,14 @@ public class Partida {
         return retiro; 
     }
 
-    public String resumen() {
+    @Override//Sobreesritura del metodo abstracto de Log
+    public String resumen() {//ternario
         if (retiro) {
-            return ganador + " gano porque " + (ganador.equals(jugador1) ? jugador2 : jugador1) + " se retiro (" + difficulty + ")";
+            return ganador + " gano porque " + (ganador.equals(jugador1) ? jugador2 : jugador1) + " se retiro (" + difficulty + ") Fecha: ";
         }
         return ganador + " hundio todos los barcos de "
                 + (ganador.equals(jugador1) ? jugador2 : jugador1)
-                + " en modo " + difficulty;
+                + " en modo " + difficulty + "Fecha: "+ getFecha();
     }
     
     @Override

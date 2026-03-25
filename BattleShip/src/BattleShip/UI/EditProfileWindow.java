@@ -181,6 +181,7 @@ public class EditProfileWindow extends JFrame{
         });
         
         if(selectedImagePath != null){
+            //Trycatch del metodo setImagePath() de player
             try{
                 current.setImagePath(selectedImagePath);
             }catch (Exception ignored){
@@ -189,6 +190,7 @@ public class EditProfileWindow extends JFrame{
             }
         }        
   
+        //Try catch del metodo actualizarPlayer() IllegalArgumetnException
         try{
             manager.actualizarPlayer(current);
         }catch(Exception Ignored){

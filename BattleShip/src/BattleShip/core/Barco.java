@@ -34,7 +34,8 @@ public enum Barco {
     }
 
     public static Barco fromCodigo(String codigo) {
-        if (codigo == null) return null;
+        if (codigo == null) 
+            return null;
 
         for (Barco b : Barco.values()) { 
             if (b.codigo.equalsIgnoreCase(codigo)) {

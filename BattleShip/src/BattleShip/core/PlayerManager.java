@@ -27,6 +27,7 @@ public class PlayerManager {
         return true;
     }
     
+    //METODOS CON FOR EACH
     public Player login(String username, String password){
         for (Player p : players){
             if (p.getUsername().equals(username) && p.getPassword().equals(password)){
@@ -35,7 +36,7 @@ public class PlayerManager {
         }
         return null;
     }
-    
+
     public boolean existeUsuario(String username){
         for (Player p : players){
             if(p.getUsername().equals(username)){
@@ -47,7 +48,7 @@ public class PlayerManager {
     
     public Player conseguirPorNombre(String username) {
         if (username == null) return null;
-        for (Player p : players) { // players = tu ArrayList<Player>
+        for (Player p : players) { 
             if (p.getUsername().equalsIgnoreCase(username.trim())) {
                 return p;
             }
@@ -56,7 +57,6 @@ public class PlayerManager {
     }
     
     public void actualizarPlayer(Player updated) {
-
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
 

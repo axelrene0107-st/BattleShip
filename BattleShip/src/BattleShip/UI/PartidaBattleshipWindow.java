@@ -28,8 +28,7 @@ public class PartidaBattleshipWindow extends JFrame{
     private static final String INDEX_PLAYER2   = "switch_jugador2.png";
     
     private static final int W= 1100;
-    private static final int H= 620;
-    
+    private static final int H= 620;   
     private static final int CELL= 60;
     private static final int N= Tablero.SIZE;
     
@@ -57,12 +56,10 @@ public class PartidaBattleshipWindow extends JFrame{
         this.manager = manager;
         this.player1 = player1;
         this.player2 = player2;
-  
-        this.GAME = new Battleship(player1, player2, player1.getTablero(), player2.getTablero());
-        GAME.iniciarPartida();
-             
-        this.tableroDefensor = (GAME.getTurnoActual() == Battleship.Turno.JUGADOR1)? GAME.getTableroJugador2() : GAME.getTableroJugador1();
         
+        this.GAME = new Battleship(player1, player2, player1.getTablero(), player2.getTablero()); 
+        GAME.iniciarPartida();           
+        this.tableroDefensor = (GAME.getTurnoActual() == Battleship.Turno.JUGADOR1)? GAME.getTableroJugador2() : GAME.getTableroJugador1();
         configureWindow();
         buildUI();
         refreshTurnUI();
@@ -204,7 +201,7 @@ public class PartidaBattleshipWindow extends JFrame{
             lastMissCol = null;
         }
          
-        String atacante = (info.turnoDisparo == Battleship.Turno.JUGADOR1) ? player1.getUsername() : player2.getUsername();
+        String atacante = (info.turnoDisparo == Battleship.Turno.JUGADOR1) ? player1.getUsername() : player2.getUsername();//Ternario para conseguir el nombre del atacante
         
         switch (info.resultado) {
             case AGUA -> appendLog(atacante + " disparo (" + fila + "," + columna + "): AGUA");
@@ -217,7 +214,7 @@ public class PartidaBattleshipWindow extends JFrame{
             appendLog("* TABLERO REGENERADO (modo dinamico)");
         }
 
-        tableroDefensor = (GAME.getTurnoActual() == Battleship.Turno.JUGADOR1) ? GAME.getTableroJugador2() : GAME.getTableroJugador1();
+        tableroDefensor = (GAME.getTurnoActual() == Battleship.Turno.JUGADOR1) ? GAME.getTableroJugador2() : GAME.getTableroJugador1();//
         refreshBoard();
         
         if (info.findelJuego) {
@@ -263,8 +260,7 @@ public class PartidaBattleshipWindow extends JFrame{
     private void onRetirar(){
         Mensaje.showConfirmWithAction(this, "fondo3.png", "Seguro deseas retirarte? ","retirarBTN.png", "retirarPRESS_BTN.png", "cancelBTN.png", "cancelPRESS_BTN.png",() -> {
             String retirado = GAME.getJugadorActual().getUsername();
-            String ganador = GAME.getOponenteActual().getUsername();
-        
+            String ganador = GAME.getOponenteActual().getUsername();       
             GAME.retirarJugadorActual();
         
             appendLog("! " + retirado + " se retiro. Gana " + ganador);
@@ -273,6 +269,24 @@ public class PartidaBattleshipWindow extends JFrame{
             dispose();
             new MenuPrincipalWindow(manager, player1).setVisible(true); 
         });
+    }
+    
+    private void appendLog(String msg) {
+        txtLog.append(msg + "\n");
+        txtLog.setCaretPosition(txtLog.getDocument().getLength());
+    }
+    
+    private Integer parse1to8(String s) {
+        try {
+            int v = Integer.parseInt(s.trim());
+            return (v >= 1 && v <= 8) ? v : null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    private boolean isTutorial() {
+        return player1.getMode() == Player.Mode.TUTORIAL;
     }
     
     private void refreshTurnUI(){
@@ -328,11 +342,9 @@ public class PartidaBattleshipWindow extends JFrame{
         repaint();
     }
     
-    private void appendLog(String msg) {
-        txtLog.append(msg + "\n");
-        txtLog.setCaretPosition(txtLog.getDocument().getLength());
-    }
 
+    
+    
     private JTextField makeField(JComponent parent, int x, int y, int w, int h) {
         JTextField t = new JTextField();
         t.setBounds(x, y, w, h);
@@ -383,18 +395,5 @@ public class PartidaBattleshipWindow extends JFrame{
         if (url == null) return null;
         Image img = new ImageIcon(url).getImage().getScaledInstance(w, h, Image.SCALE_FAST);
         return new ImageIcon(img);
-    }
-
-    private Integer parse1to8(String s) {
-        try {
-            int v = Integer.parseInt(s.trim());
-            return (v >= 1 && v <= 8) ? v : null;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-    
-    private boolean isTutorial() {
-        return player1.getMode() == Player.Mode.TUTORIAL;
     }
 }

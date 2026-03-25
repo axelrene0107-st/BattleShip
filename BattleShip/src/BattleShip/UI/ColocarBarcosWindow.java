@@ -294,6 +294,7 @@ public class ColocarBarcosWindow extends JFrame {
         txtRestantes.setText(String.valueOf(restantes));
     }
 
+    //Switch para la cantidad de barcos por dificultad
     private int maxBarcosPorDificultad(Player.Difficulty diff) {
         return switch (diff) {
             case EASY   -> 5;
@@ -350,14 +351,6 @@ public class ColocarBarcosWindow extends JFrame {
     private ImageIcon loadScaledIcon(String file, int w, int h) {
         URL url = getClass().getResource(ASSETS + file);
         if (url == null) throw new RuntimeException("No se encontró: " + ASSETS + file);
-        Image img = new ImageIcon(url).getImage().getScaledInstance(w, h, Image.SCALE_FAST);
-        return new ImageIcon(img);
-    }
-
-    private ImageIcon tryIcon(String file, int w, int h) {
-        if (file == null) return null;
-        URL url = getClass().getResource(ASSETS + file);
-        if (url == null) return null;
         Image img = new ImageIcon(url).getImage().getScaledInstance(w, h, Image.SCALE_FAST);
         return new ImageIcon(img);
     }

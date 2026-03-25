@@ -23,6 +23,7 @@ public class Tablero {
         barcos = new ArrayList<>();
     }
 
+    //Metodo que devuelve false si fila o columna >8 o <1
     public static boolean dentro(int fila, int columna) {
         return fila >= 0 && fila < SIZE && columna >= 0 && columna < SIZE;
     }
@@ -31,7 +32,7 @@ public class Tablero {
         return dentro(fila, columna) ? ocupacion[fila][columna] : null;
     }
 
-    
+    //Switch para los valores de las direccion 
     static int dr(Direccion dir) {
         return switch (dir) {
             case NORTE -> -1;
@@ -51,6 +52,7 @@ public class Tablero {
         };
     }
 
+    //Para verificar si esta fuera de los limites de la matriz
     public boolean puedeColocar(int fila, int columna, Direccion dir, Barco tipo) {
         int longitud = tipo.getTamanio();
         int dRow = dr(dir);
@@ -117,14 +119,22 @@ public class Tablero {
         return conteo;
     }
 
+    //Recursividad en el reseteo de los tableros
     public void reset() {
-        for (int r = 0; r < SIZE; r++) {
-            for (int c = 0; c < SIZE; c++) {
-                ocupacion[r][c] = null;
-                disparado[r][c] = false;
-            }
-        }
+        resetRecursivo(0);
         barcos.clear();
+    }
+
+    private void resetRecursivo(int i) {
+        if (i >= SIZE * SIZE) return;
+
+        int r = i / SIZE;
+        int c = i % SIZE;
+
+        ocupacion[r][c] = null;
+        disparado[r][c] = false;
+
+        resetRecursivo(i + 1);
     }
 
     
@@ -137,14 +147,14 @@ public class Tablero {
             disparado[fila][columna] = true;
             return ResultadoDisparo.AGUA;
         }
-        
+        //Operador terniario
         if (disparado[fila][columna]) {
             return b.estaHundido() ? ResultadoDisparo.HUNDIDO : ResultadoDisparo.IMPACTO;
         }
 
         b.recibirImpacto();
         disparado[fila][columna] = true;
-        return b.estaHundido() ? ResultadoDisparo.HUNDIDO : ResultadoDisparo.IMPACTO;
+        return b.estaHundido() ? ResultadoDisparo.HUNDIDO : ResultadoDisparo.IMPACTO; //Operador terniario
     }
 
     
@@ -187,7 +197,7 @@ public class Tablero {
         List<Instance> vivos = new ArrayList<>();
 
         for (Instance b : barcos) { // foreach
-            if (b.estaHundido()) hundidos.add(b);
+            if(b.estaHundido()) hundidos.add(b);
             else vivos.add(b);
         }
 
@@ -248,11 +258,19 @@ public class Tablero {
             }
         }
     }
-
+    
+    public boolean todosHundidos() {
+        return barcosRestantes() == 0;
+    }
+    
+    //Clase interna celda
     private static class Cell {
         int r, c;
         boolean shot;
-        Cell(int r, int c) { this.r = r; this.c = c; }
+        Cell(int r, int c) { 
+            this.r = r; 
+            this.c = c; 
+        }
     }
 
     private static class ShipSnapshot {
@@ -289,7 +307,5 @@ public class Tablero {
         Collections.sort(cells, Comparator.comparingInt((Cell a) -> a.r).thenComparingInt(a -> a.c));
     }
        
-    public boolean todosHundidos() {
-        return barcosRestantes() == 0;
-    }
+
 }

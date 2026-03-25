@@ -19,10 +19,8 @@ public class Player {
     private int puntos;
     private String imagePath;
     private Difficulty difficulty;
-    private Mode mode;
-    
+    private Mode mode;   
     private final Tablero tablero;
-    
     private final ArrayList<Partida> historial;
       
     public Player(String username, String password, String imagePath){
@@ -31,7 +29,7 @@ public class Player {
         this.imagePath= imagePath;
         
         this.puntos=0;       
-        difficulty= Difficulty.EASY;
+        difficulty= Difficulty.NORMAL;
         mode= Mode.ARCADE;            
         this.tablero = new Tablero();
         historial = new ArrayList<>();
